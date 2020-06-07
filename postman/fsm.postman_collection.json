@@ -150,7 +150,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8088/rest/v1/fsm/current/state/passive",
+					"raw": "http://localhost:8088/rest/v1/fsm/current/state/idle",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -162,7 +162,7 @@
 						"fsm",
 						"current",
 						"state",
-						"passive"
+						"idle"
 					]
 				}
 			},

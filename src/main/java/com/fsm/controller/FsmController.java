@@ -50,7 +50,7 @@ public class FsmController {
         return ResponseEntity.ok(fsmService.findAllActiveFsm());
     }
 
-    @GetMapping("/current/state/passive")
+    @GetMapping("/current/state/idle")
     public ResponseEntity<Map<String, RestStateDto>> findAllPassiveFsms() {
         return ResponseEntity.ok(fsmService.findAllPassiveFsm());
     }
