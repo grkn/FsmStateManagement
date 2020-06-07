@@ -1,4 +1,4 @@
-package com.fsm.coverter;
+package com.fsm.converter;
 
 import com.fsm.dto.EventStateDto;
 import com.fsm.core.data.FsmState;
