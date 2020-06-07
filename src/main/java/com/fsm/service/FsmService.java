@@ -89,7 +89,7 @@ public class FsmService {
         }
         fsm.destroy();
         fsmMap.remove(transactionId);
-        fsmRepository.delete(FsmEntity.builder().transactionId(transactionId).build());
+        fsmRepository.deleteByTransactionId(transactionId);
         redisClient.clearJsonValue(transactionId);
         redisClient.clearJsonValue(transactionId + CURRENT_STATE);
     }
