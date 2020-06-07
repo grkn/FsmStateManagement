@@ -1,0 +1,197 @@
+{
+	"info": {
+		"_postman_id": "db345544-a0a1-4c34-817e-74e85d8c5430",
+		"name": "fsm",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "create_fsm",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c6123ceb-f736-4f4a-876a-a00135184de3",
+						"exec": [
+							"let response = pm.response.json();",
+							"pm.globals.set(\"transactionId\", response.transactionId);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n    {\n        \"stateName\": \"s1\",\n        \"httpMethod\": \"GET\",\n        \"revertEndpoint\": \"/api/v1/revert\",\n        \"data\": {\n            \"name\": \"customName\",\n            \"id\": \"1\"\n        },\n        \"events\": [\n            {\n                \"eventName\": \"event1\",\n                \"nextStateName\": \"s2\"\n            },\n            {\n            \t\"eventName\": \"event3\",\n            \t\"nextStateName\": \"s3\"\n            }\n        ]\n    },\n    {\n        \"stateName\": \"s2\",\n        \"httpMethod\": \"GET\",\n        \"revertEndpoint\": \"/api/v1/revert\",\n        \"data\": {\n            \"name\": \"customName\",\n            \"id\": \"2\"\n        },\n        \"events\": [\n        \t{\n                \"eventName\": \"event2\",\n                \"nextStateName\": \"s1\"\n            }\t\n        ]\n    },\n    {\n        \"stateName\": \"s3\",\n        \"httpMethod\": \"GET\",\n        \"revertEndpoint\": \"/api/v1/revert\",\n        \"data\": {\n            \"name\": \"customName\",\n            \"id\": \"3\"\n        },\n        \"events\" : [\n            {\n            \t\"eventName\": \"event4\",\n            \t\"nextStateName\": \"s1\"\n            }\n        ]\n    }\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8088/rest/v1/fsm/create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8088",
+					"path": [
+						"rest",
+						"v1",
+						"fsm",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get_current_state",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8088/rest/v1/fsm/{{transactionId}}/current/state",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8088",
+					"path": [
+						"rest",
+						"v1",
+						"fsm",
+						"{{transactionId}}",
+						"current",
+						"state"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "next-state",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8088/rest/v1/fsm/{{transactionId}}/next/event1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8088",
+					"path": [
+						"rest",
+						"v1",
+						"fsm",
+						"{{transactionId}}",
+						"next",
+						"event1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete_fsm",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8088/rest/v1/fsm/{{transactionId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8088",
+					"path": [
+						"rest",
+						"v1",
+						"fsm",
+						"{{transactionId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "find all without pagination current states",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8088/rest/v1/fsm/current/state/active",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8088",
+					"path": [
+						"rest",
+						"v1",
+						"fsm",
+						"current",
+						"state",
+						"active"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "find all without pagination not active currentStates ",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8088/rest/v1/fsm/current/state/passive",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8088",
+					"path": [
+						"rest",
+						"v1",
+						"fsm",
+						"current",
+						"state",
+						"passive"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "fail fsm",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8088/rest/v1/fsm/{{transactionId}}/state/fail",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8088",
+					"path": [
+						"rest",
+						"v1",
+						"fsm",
+						"{{transactionId}}",
+						"state",
+						"fail"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
