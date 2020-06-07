@@ -59,7 +59,6 @@ public class FsmService {
             fsm = restoreFromRedisAndDatabase(transactionId);
         }
         RestStateDto restStateDto = fsm.nextState(stateName);
-        fsm = fsmMap.get(transactionId);
 
         redisClient.setJsonValue(transactionId + CURRENT_STATE, objectMapper.writeValueAsString(fsm.getCurrentState()));
         return restStateDto;
@@ -112,6 +111,7 @@ public class FsmService {
 
         fsmEntity.setActive(true);
         fsmRepository.save(fsmEntity);
+        fsmMap.put(transactionId, fsm);
         return fsm;
     }
 
