@@ -1,12 +1,17 @@
 # FsmStateManagement
 Finite state machine implementation with state management in microservices.
 
-# Docker compose yaml
+# Redis
 Docker compose yaml is uploaded for local redis implementation.
+docker-compose up command in the FsmStateManagement folder starts the redis.
 
 - Finite State Machine is implemnted on server with core package.
 - Also there is state management api.
-- There are postman collections for examples.
+- There are postman collections.
+
+- http://localhost:8088/rest/v1/fsm/create
+- Example body is below for POST 
+
 
 ```[
     {
@@ -63,6 +68,10 @@ Docker compose yaml is uploaded for local redis implementation.
 - State has fields with revertEndpoint,httpMethod,data to be called by FSM if a state fails.
 - Also there are stateName, and events. Fsm implementation enables recursive states by design.
 - For Example: state1 -> event1 -> state2 -> event2 -> state1. 
+
+# For Other Implementations
+- Rabbitmq implementation will be added.
+- Extra api will be added for FSM
 
 
 
