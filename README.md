@@ -76,7 +76,7 @@ You can see in the postman scripts as well.
 - GET http://localhost:8088/rest/v1/fsm/{{transactionId}}/next/{{eventName}}  : Moves Next State by given eventName
 - DELETE http://localhost:8088/rest/v1/fsm/{{transactionId}}  : Removes all data(in memory, database, redis) of FSM
 - GET http://localhost:8088/rest/v1/fsm/current/state/active  : Gets all current states of active FSMs
-- GET http://localhost:8088/rest/v1/fsm/current/state/passive  : Gets all current states of passive FSMs
+- GET http://localhost:8088/rest/v1/fsm/current/state/idle  : Gets all current states of idle FSMs
 - PUT http://localhost:8088/rest/v1/fsm/{{transactionId}}/state/fail  : Sets failure of FSM
 
 # Features
