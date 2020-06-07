@@ -58,8 +58,8 @@ Docker compose yaml is uploaded for local redis implementation.
             }
         ]
     }
-]```
-
+]
+```
 - State has fields with revertEndpoint,httpMethod,data to be called by FSM if a state fails.
 - Also there are stateName, and events. Fsm implementation enables recursive FSM for design issues.
 - For Example: state1 -> event1 -> state2 -> event2 -> state1. 
