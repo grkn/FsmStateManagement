@@ -71,13 +71,13 @@ docker-compose up command in the FsmStateManagement folder starts the redis.
 
 # Endpoints
 You can see in the postman scripts as well.
-- POST http://localhost:8088/rest/v1/fsm/create : Creates FSM with states and events
-- GET http://localhost:8088/rest/v1/fsm/{{transactionId}}/current/state : Gets current state of FSM by transactionId
-- GET http://localhost:8088/rest/v1/fsm/{{transactionId}}/next/{{eventName}}: Moves Next State by given eventName
-- DELETE http://localhost:8088/rest/v1/fsm/{{transactionId}}: Removes all data(in memory, database, redis) of FSM
-- GET http://localhost:8088/rest/v1/fsm/current/state/active: Gets all current states of active FSMs
-- GET http://localhost:8088/rest/v1/fsm/current/state/passive: Gets all current states of passive FSMs
-- PUT http://localhost:8088/rest/v1/fsm/{{transactionId}}/state/fail: Sets failure of FSM
+- POST http://localhost:8088/rest/v1/fsm/create  : Creates FSM with states and events
+- GET http://localhost:8088/rest/v1/fsm/{{transactionId}}/current/state  : Gets current state of FSM by transactionId
+- GET http://localhost:8088/rest/v1/fsm/{{transactionId}}/next/{{eventName}}  : Moves Next State by given eventName
+- DELETE http://localhost:8088/rest/v1/fsm/{{transactionId}}  : Removes all data(in memory, database, redis) of FSM
+- GET http://localhost:8088/rest/v1/fsm/current/state/active  : Gets all current states of active FSMs
+- GET http://localhost:8088/rest/v1/fsm/current/state/passive  : Gets all current states of passive FSMs
+- PUT http://localhost:8088/rest/v1/fsm/{{transactionId}}/state/fail  : Sets failure of FSM
 
 # Features
 - Fsm's states are stored in memory and redis according to transaction identifier.
