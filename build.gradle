@@ -1,0 +1,23 @@
+plugins {
+    id 'java'
+}
+
+group 'final_state_machine_server'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.2.7.RELEASE'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-redis', version: '2.2.7.RELEASE'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '2.2.7.RELEASE'
+    compileOnly 'org.projectlombok:lombok:1.18.12'
+    annotationProcessor 'org.projectlombok:lombok:1.18.12'
+    compile group: 'com.h2database', name: 'h2', version: '1.4.200'
+
+}
