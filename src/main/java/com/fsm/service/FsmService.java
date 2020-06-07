@@ -8,7 +8,7 @@ import com.fsm.client.RestClient;
 import com.fsm.constant.Status;
 import com.fsm.core.Fsm;
 import com.fsm.core.FsmImpl;
-import com.fsm.core.tupple.FcmTransactionIdTupple;
+import com.fsm.core.tupple.TransactionIdFcmTupple;
 import com.fsm.core.tupple.TransactionIdRestStateDtoTupple;
 import com.fsm.dto.RestClientRequestDto;
 import com.fsm.dto.RestStateDto;
@@ -36,9 +36,9 @@ public class FsmService {
     @PostConstruct
     public void initialize() {
         fsmMap = fsmRepository.findAllByActive(true).stream()
-                .map(fsmEntity -> new FcmTransactionIdTupple(fsmEntity.getTransactionId(),createFsmAndSetCurrentStateOfFsm(fsmEntity)))
+                .map(fsmEntity -> new TransactionIdFcmTupple(fsmEntity.getTransactionId(),createFsmAndSetCurrentStateOfFsm(fsmEntity)))
                 .filter(tupple ->  tupple.getFsm() != null)
-                .collect(Collectors.toConcurrentMap(FcmTransactionIdTupple::getTransactionId,FcmTransactionIdTupple::getFsm));
+                .collect(Collectors.toConcurrentMap(TransactionIdFcmTupple::getTransactionId, TransactionIdFcmTupple::getFsm));
     }
 
     public String create(List<RestStateDto> restStateDtos) throws JsonProcessingException {
