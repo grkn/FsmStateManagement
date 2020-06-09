@@ -91,6 +91,7 @@ You can see in the postman scripts as well.
 # For Other Implementations
 - Rabbitmq implementation will be added.
 - Extra api will be added for FSM
+- Conductor Netflix(Workflow Management)
 
 ## SEE ALSO
 https://github.com/grkn/FsmStateManagementClient
