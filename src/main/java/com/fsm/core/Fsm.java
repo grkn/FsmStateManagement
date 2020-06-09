@@ -1,7 +1,9 @@
 package com.fsm.core;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fsm.core.data.FsmState;
 import com.fsm.dto.RestStateDto;
+import org.springframework.http.HttpMethod;
 
 import java.util.List;
 
@@ -13,6 +15,8 @@ public interface Fsm {
     void destroy();
 
     RestStateDto getCurrentState();
+
+    void setDataAndEndpointAndMethod(JsonNode data, String endpoint, HttpMethod httpMethod);
 
     void setCurrentState(RestStateDto convert);
 

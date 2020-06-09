@@ -1,6 +1,7 @@
 package com.fsm.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fsm.dto.RestStateDto;
 import com.fsm.resource.FsmCreateResource;
 import com.fsm.service.FsmService;
@@ -58,6 +59,12 @@ public class FsmController {
     @PutMapping("/{transactionId}/state/fail")
     public ResponseEntity<Void> fail(@PathVariable("transactionId") String transactionId) {
         fsmService.fsmFailed(transactionId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{transactionId}/current/data")
+    public ResponseEntity<Void> persistData(@PathVariable("transactionId") String transactionId, @RequestBody RestStateDto restStateDto) {
+        fsmService.setData(transactionId, restStateDto);
         return ResponseEntity.noContent().build();
     }
 }

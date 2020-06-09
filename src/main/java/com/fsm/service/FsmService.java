@@ -54,10 +54,7 @@ public class FsmService {
     }
 
     public RestStateDto nextState(String transactionId, String stateName) throws JsonProcessingException {
-        Fsm fsm = fsmMap.get(transactionId);
-        if (fsm == null) {
-            fsm = restoreFromRedisAndDatabase(transactionId);
-        }
+        Fsm fsm = getFsm(transactionId);
         RestStateDto restStateDto = fsm.nextState(stateName);
 
         redisClient.setJsonValue(transactionId + CURRENT_STATE, objectMapper.writeValueAsString(fsm.getCurrentState()));
@@ -73,19 +70,8 @@ public class FsmService {
         updateFsmActiveState(transactionId);
     }
 
-    private void updateFsmActiveState(String transactionId) {
-        FsmEntity fsmEntity = fsmRepository.findByTransactionId(transactionId);
-        if (Objects.nonNull(fsmEntity)) {
-            fsmEntity.setActive(false);
-            fsmRepository.save(fsmEntity);
-        }
-    }
-
     public void deleteFsm(String transactionId) {
-        Fsm fsm = fsmMap.get(transactionId);
-        if (fsm == null) {
-            fsm = restoreFromRedisAndDatabase(transactionId);
-        }
+        Fsm fsm = getFsm(transactionId);
         fsm.destroy();
         fsmMap.remove(transactionId);
         fsmRepository.deleteByTransactionId(transactionId);
@@ -94,10 +80,7 @@ public class FsmService {
     }
 
     public RestStateDto getCurrentState(String transactionId) {
-        Fsm fsm = fsmMap.get(transactionId);
-        if (fsm == null) {
-            fsm = restoreFromRedisAndDatabase(transactionId);
-        }
+        Fsm fsm = getFsm(transactionId);
         return fsm.getCurrentState();
     }
 
@@ -137,10 +120,7 @@ public class FsmService {
     }
 
     public void fsmFailed(String transactionId) {
-        Fsm fsm = fsmMap.get(transactionId);
-        if (fsm == null) {
-            fsm = restoreFromRedisAndDatabase(transactionId);
-        }
+        Fsm fsm = getFsm(transactionId);
         fsm.setCurrentStatusFailed();
         List<RestStateDto> restStateDtoList = fsm.getSuccessfulStates();
         for (RestStateDto restStateDto : restStateDtoList) {
@@ -152,6 +132,11 @@ public class FsmService {
                     .build());
         }
         deleteFsm(transactionId);
+    }
+
+    public void setData(String transactionId, RestStateDto restStateDto) {
+        getFsm(transactionId)
+                .setDataAndEndpointAndMethod(restStateDto.getData(), restStateDto.getRevertEndpoint(), restStateDto.getHttpMethod());
     }
 
     private Fsm createFsmAndSetCurrentStateOfFsm(FsmEntity fsmEntity) {
@@ -169,5 +154,21 @@ public class FsmService {
         return null;
     }
 
+
+    private void updateFsmActiveState(String transactionId) {
+        FsmEntity fsmEntity = fsmRepository.findByTransactionId(transactionId);
+        if (Objects.nonNull(fsmEntity)) {
+            fsmEntity.setActive(false);
+            fsmRepository.save(fsmEntity);
+        }
+    }
+
+    private Fsm getFsm(String transactionId) {
+        Fsm fsm = fsmMap.get(transactionId);
+        if (fsm == null) {
+            fsm = restoreFromRedisAndDatabase(transactionId);
+        }
+        return fsm;
+    }
 }
 

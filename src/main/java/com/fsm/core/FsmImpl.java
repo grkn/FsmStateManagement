@@ -1,11 +1,13 @@
 package com.fsm.core;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fsm.constant.Status;
 import com.fsm.core.data.FsmEvent;
 import com.fsm.core.data.FsmState;
 import com.fsm.converter.FsmStateToRestStateConverter;
 import com.fsm.converter.RestStateToFsmStateConverter;
 import com.fsm.dto.RestStateDto;
+import org.springframework.http.HttpMethod;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
@@ -75,6 +77,14 @@ public class FsmImpl implements Fsm {
     public RestStateDto getCurrentState() {
         return FsmStateToRestStateConverter.convert(currentState);
     }
+
+    @Override
+    public void setDataAndEndpointAndMethod(JsonNode data, String endpoint, HttpMethod httpMethod) {
+        currentState.setData(data);
+        currentState.setHttpMethod(httpMethod);
+        currentState.setRevertEndpoint(endpoint);
+    }
+
 
     @Override
     public void setCurrentState(RestStateDto currentState) {
