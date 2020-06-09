@@ -78,6 +78,7 @@ You can see in the postman scripts as well.
 - GET http://localhost:8088/rest/v1/fsm/current/state/active  : Gets all current states of active FSMs
 - GET http://localhost:8088/rest/v1/fsm/current/state/idle  : Gets all current states of idle FSMs
 - PUT http://localhost:8088/rest/v1/fsm/{{transactionId}}/state/fail  : Sets failure of FSM
+- PUT http://localhost:8088/rest/v1/fsm/{{transactionId}}/current/data : Set revertEndpoint,data,httpMethod dynamically
 
 # Features
 - Fsm's states are stored in memory and redis according to transaction identifier.

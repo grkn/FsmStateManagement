@@ -8,6 +8,8 @@ import com.fsm.client.RestClient;
 import com.fsm.constant.Status;
 import com.fsm.core.Fsm;
 import com.fsm.core.FsmImpl;
+import com.fsm.core.tupple.TransactionIdFcmTupple;
+import com.fsm.core.tupple.TransactionIdRestStateDtoTupple;
 import com.fsm.dto.RestClientRequestDto;
 import com.fsm.dto.RestStateDto;
 import com.fsm.model.FsmEntity;
@@ -18,7 +20,7 @@ import org.springframework.util.CollectionUtils;
 
 import javax.annotation.PostConstruct;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -33,14 +35,10 @@ public class FsmService {
 
     @PostConstruct
     public void initialize() {
-        fsmMap = new ConcurrentHashMap<>();
-        fsmRepository.findAllByActive(true)
-                .forEach(fsmEntity -> {
-                    Fsm fsm = createFsmAndSetCurrentStateOfFsm(fsmEntity);
-                    if (Objects.nonNull(fsm)) {
-                        fsmMap.put(fsmEntity.getTransactionId(), fsm);
-                    }
-                });
+        fsmMap = fsmRepository.findAllByActive(true).stream()
+                .map(fsmEntity -> new TransactionIdFcmTupple(fsmEntity.getTransactionId(),createFsmAndSetCurrentStateOfFsm(fsmEntity)))
+                .filter(tupple ->  tupple.getFsm() != null)
+                .collect(Collectors.toConcurrentMap(TransactionIdFcmTupple::getTransactionId, TransactionIdFcmTupple::getFsm));
     }
 
     public String create(List<RestStateDto> restStateDtos) throws JsonProcessingException {
@@ -99,20 +97,15 @@ public class FsmService {
     }
 
     public Map<String, RestStateDto> findAllActiveFsm() {
-        Map<String, RestStateDto> fsmList = new HashMap<>();
-        for (Map.Entry<String, Fsm> entry : fsmMap.entrySet()) {
-            fsmList.put(entry.getKey(), entry.getValue().getCurrentState());
-        }
-        return fsmList;
+        return fsmMap.entrySet().stream()
+                .map(fsmEntry-> new TransactionIdRestStateDtoTupple(fsmEntry.getKey(),fsmEntry.getValue().getCurrentState()))
+                .collect(Collectors.toMap(TransactionIdRestStateDtoTupple::getTransactionId,TransactionIdRestStateDtoTupple::getRestStateDto));
     }
 
     public Map<String, RestStateDto> findAllPassiveFsm() {
-        Map<String, RestStateDto> passiveFsmList = new HashMap<>();
-        fsmRepository.findAllByActive(false).forEach(fsmEntity -> {
-            passiveFsmList.put(fsmEntity.getTransactionId(), createFsmAndSetCurrentStateOfFsm(fsmEntity).getCurrentState());
-        });
-
-        return passiveFsmList;
+        return fsmRepository.findAllByActive(false).stream()
+                .map(fsmEntity -> new TransactionIdRestStateDtoTupple(fsmEntity.getTransactionId(),createFsmAndSetCurrentStateOfFsm(fsmEntity).getCurrentState()))
+                .collect(Collectors.toMap(TransactionIdRestStateDtoTupple::getTransactionId,TransactionIdRestStateDtoTupple::getRestStateDto));
     }
 
     public Map<String, Fsm> getFsmMap() {
@@ -122,15 +115,14 @@ public class FsmService {
     public void fsmFailed(String transactionId) {
         Fsm fsm = getFsm(transactionId);
         fsm.setCurrentStatusFailed();
-        List<RestStateDto> restStateDtoList = fsm.getSuccessfulStates();
-        for (RestStateDto restStateDto : restStateDtoList) {
 
-            restClient.sendRequest(RestClientRequestDto.builder()
-                    .status(Status.ACTIVE)
-                    .failCount(0)
-                    .restStateDto(restStateDto)
-                    .build());
-        }
+        fsm.getSuccessfulStates()
+                .forEach(restStateDto -> restClient.sendRequest(RestClientRequestDto.builder()
+                        .status(Status.ACTIVE)
+                        .failCount(0)
+                        .restStateDto(restStateDto)
+                        .build()));
+
         deleteFsm(transactionId);
     }
 
