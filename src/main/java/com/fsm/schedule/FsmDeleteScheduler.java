@@ -22,13 +22,9 @@ public class FsmDeleteScheduler {
     @Scheduled(fixedRate = 1000 * 60)
     public void deleteFsmAfterFiveMinuteIdle() {
         long currentMs = System.currentTimeMillis();
-        List<String> toBeDeleted = new ArrayList<>();
-        for (Map.Entry<String, Fsm> entry : fsmService.getFsmMap().entrySet()) {
-            if (currentMs - entry.getValue().getLastUsed() > 1000 * 60 * 5) {
-                toBeDeleted.add(entry.getKey());
-            }
-        }
-
-        toBeDeleted.forEach(fsmService::removeInMemoryFsm);
+        fsmService.getFsmMap().entrySet().stream()
+                .filter(entry -> currentMs - entry.getValue().getLastUsed() > 1000 * 60 * 5)
+                .map(Map.Entry::getKey)
+                .forEach(fsmService::removeInMemoryFsm);
     }
 }
