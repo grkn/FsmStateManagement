@@ -5,12 +5,9 @@ Finite state machine implementation with state management in microservices.
 Docker compose yaml is uploaded for local redis implementation.
 docker-compose up command in the FsmStateManagement folder starts the redis.
 
-- Finite State Machine is implemented on server with core package.
-- Also there is state management api.
-- There are postman collections.
-
-- http://localhost:8088/rest/v1/fsm/create
-- Example body is below for POST 
+- Finite State Machine is implemented on server with core package. Also there are endpoint listed below that helps to trace transactions.
+- There are postman collections to test e2e.
+- Example body is below for POST operation and creates a new finite state machine.
 
 
 ```[
